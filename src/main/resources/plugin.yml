@@ -1,0 +1,13 @@
+name: FamilySystem
+version: '${project.version}'
+main: de.iplexy.family.FamilySystem
+api-version: 1.19
+authors: [ iPlexy ]
+description: FamilySystem
+website: https://iplexy.de
+depend:
+  - HeadDatabase
+commands:
+  Family:
+    description: "Command to manage families"
+
