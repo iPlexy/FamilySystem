@@ -1,5 +1,6 @@
 package de.iplexy.family.listener;
 
+import de.iplexy.family.enums.Permissions;
 import de.iplexy.family.groups.User;
 import de.iplexy.family.utils.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -23,9 +24,9 @@ import static de.iplexy.family.FamilySystem.*;
 public class InventoryClickListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-
-        if (e.getView().getTitle().contains(prefix+"Ranks of ")) {
-            Player p = (Player) e.getWhoClicked();
+        String title = e.getView().getTitle();
+        Player p = (Player) e.getWhoClicked();
+        if (title.contains(prefix+"Ranks of ")) {
             e.setCancelled(true);
             if (e.getRawSlot() == 31) {
 
@@ -63,6 +64,29 @@ public class InventoryClickListener implements Listener {
 
                         p.openInventory(inv);
                     }
+                }
+            }
+        }else if(title.contains("§fEdit ")&&ChatColor.stripColor(title).contains(ChatColor.stripColor(title))){
+            e.setCancelled(true);
+            String rank = ChatColor.stripColor(e.getInventory().getItem(2).getItemMeta().getDisplayName()).replace("» ","").split(" ")[0];
+            Integer rankID = Integer.parseInt(ChatColor.stripColor(e.getInventory().getItem(2).getItemMeta().getDisplayName()).replace("» "+rank+" (","").replace(")", ""));
+            if (e.getRawSlot()==0){
+                User user = User.getUser(p.getUniqueId());
+                if (rankID.equals(14)||rankID.equals(1)){
+                    p.sendMessage("You can't delete this rank.");
+                }else{
+                    if(user.hasPermission(Permissions.DELETERANK)) {
+                        if(user.getFamily().deleteRank(rankID)) {
+                            p.sendMessage("You deleted the rank " + rank);
+                        }else{
+                            p.sendMessage("There is no rank with id "+rankID);
+                        }
+                    }
+                }
+            }else if(e.getRawSlot()==4){
+                User user = User.getUser(p.getUniqueId());
+                if(user.hasPermission(Permissions.RENAMERANK)){
+                    AnvilGUI.renameRank(p,rankID,rank);
                 }
             }
         }

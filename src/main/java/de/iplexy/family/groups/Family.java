@@ -85,6 +85,23 @@ public class Family {
         return true;
     }
 
+    public boolean deleteRank(Integer rankID){
+        if(!this.ranks.containsKey(rankID)) return false;
+        this.ranks.remove(rankID);
+        for(UUID uuid : this.members.keySet()){
+            if(this.members.get(uuid).equals(rankID)){
+                this.members.put(uuid,1);
+            }
+        }
+        return true;
+    }
+
+    public boolean renameRank(Integer rankID,String name){
+        if(!this.ranks.containsKey(rankID)) return false;
+        this.ranks.put(rankID,name);
+        return true;
+    }
+
 
 
 
